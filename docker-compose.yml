@@ -1,0 +1,19 @@
+version: '3.6'
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+  server:
+    build:
+      context: .
+    ports:
+      - 65432:65432
+
+volumes:
+  redis_data:
+
