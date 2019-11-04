@@ -8,6 +8,10 @@ verify_ssl = true
 [packages]
 redis = "*"
 flask = "*"
+sqlalchemy = "*"
+alembic = "*"
+flask-sqlalchemy = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.6"

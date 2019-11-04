@@ -1,17 +1,17 @@
 import logging
-from pathlib import Path
 
-import redis as rd
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+from server import config
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 app = Flask(__name__)
-
-PATH_TO_LOG_FILE = Path("/var/log/server.log")
-REDIS = rd.Redis(host="redis", port=6379)
-SERVER_PORT = 65432
+app.config["SQLALCHEMY_DATABASE_URI"] = config.DATABASE_URL
+db = SQLAlchemy(app)
 
 from . import routes
 from . import error_handlers
+from . import model
