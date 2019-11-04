@@ -36,11 +36,14 @@ def post_message(key: int):
     if request.json is None:
         raise BadRequest
 
-    created = model.Message.query.filter_by(key=key).first() is not None
+    old_message = model.Message.query.filter_by(key=key).first()
+    if old_message is not None:
+        db.session.delete(old_message)
+
     db.session.add(model.Message(key=key, value=request.json))
     db.session.commit()
 
-    if created:
+    if old_message is None:
         return Response(status=HTTPStatus.CREATED)
 
     return Response(status=HTTPStatus.OK)
