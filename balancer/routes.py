@@ -1,8 +1,13 @@
 import requests
+import logging
 from flask import Response, request
 
 from balancer import config
 from . import app, redis
+
+
+logger = logging.getLogger(__name__)
+
 
 INDEX_TO_SERVER_URL = {
     0: config.SERVER0_URL,
@@ -20,9 +25,12 @@ def request_server(method: str, key: int) -> Response:
 
 @app.route('/messages/<int:key>', methods=["GET"])
 def get_message(key: int):
+
+    logger.debug("ask  cache for key=%d" % key)
     if redis.exists(key):
         return Response(redis[key].decode(), content_type="application/json")
 
+    logger.warning("no value in cache for key=%d" % key)
     server_response = request_server("get", key)
     if server_response.status_code == 200:
         redis[key] = server_response.data
