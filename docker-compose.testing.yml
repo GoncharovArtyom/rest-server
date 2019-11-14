@@ -1,0 +1,67 @@
+version: '3.6'
+
+services:
+  database:
+    image: postgres:latest
+    environment:
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASS=123
+    ports:
+      - 5432:5432
+
+
+  redis:
+    image: redis:latest
+
+  balancer:
+    build:
+      context: .
+    environment:
+    - SERVER0_URL=http://server0:65432/
+    - SERVER1_URL=http://server1:65432/
+    - REDIS_HOST=redis
+    - REDIS_PORT=6379
+
+    command: ["python", "run_balancer.py"]
+
+    depends_on:
+    - server1
+    - server0
+    - redis
+
+  server0:
+    build:
+      context: .
+    environment:
+    - DATABASE_URL=postgresql://postgres:123@database:5432/postgres
+    depends_on:
+    - database
+    command: bash -c "alembic upgrade head && python run_server.py"
+
+  server1:
+    build:
+      context: .
+    environment:
+    - DATABASE_URL=postgresql://postgres:123@database:5432/postgres
+    depends_on:
+    - database
+
+  tests:
+    build:
+      context: .
+    environment:
+    - SERVER_URL=http://server0:65432
+    - DATABASE_URL=postgresql://postgres:123@database:5432/postgres
+    - REDIS_HOST=redis
+    - REDIS_PORT=6379
+    - BALANCER_URL=http://balancer:65432
+    command: [
+      "./wait-for-it.sh", "database:5432", "--",
+      "./wait-for-it.sh", "redis:6379", "--",
+      "pytest", "-s", "tests"
+    ]
+    depends_on:
+    - balancer
+    - server0
+    - server1
+    - database

@@ -6,6 +6,8 @@ services:
     environment:
     - POSTGRES_USER=postgres
     - POSTGRES_PASS=123
+    ports:
+      - 5432:5432
     volumes:
     - db:/var/lib/postgresql/data
 
@@ -14,6 +16,8 @@ services:
     image: redis:latest
     volumes:
       - redis_data:/data
+    ports:
+      - 6379:6379
 
   balancer:
     build:
@@ -24,7 +28,7 @@ services:
     - REDIS_HOST=redis
     - REDIS_PORT=6379
     ports:
-    - 65432:65432
+    - 65433:65432
     command: ["python", "run_balancer.py"]
 
   server0:
@@ -32,6 +36,8 @@ services:
       context: .
     environment:
       - DATABASE_URL=postgresql://postgres:123@database:5432/postgres
+    ports:
+      - 65432:65432
 
   server1:
     build:

@@ -16,7 +16,7 @@ INDEX_TO_SERVER_URL = {
 
 
 def request_server(method: str, key: int) -> Response:
-    server_index = key % 2
+    server_index = key % len(INDEX_TO_SERVER_URL)
     server_url = INDEX_TO_SERVER_URL[server_index]
 
     response = getattr(requests, method)(server_url + f"messages/{key}", data=request.data, headers=request.headers)
