@@ -26,11 +26,11 @@ def request_server(method: str, key: int) -> Response:
 @app.route('/messages/<int:key>', methods=["GET"])
 def get_message(key: int):
 
-    logger.debug("ask  cache for key=%d" % key)
+    logger.debug("GET: ask cache for key=%d" % key)
     if redis.exists(key):
         return Response(redis[key].decode(), content_type="application/json")
 
-    logger.warning("no value in cache for key=%d" % key)
+    logger.warning("GET: no value in cache for key=%d" % key)
     server_response = request_server("get", key)
     if server_response.status_code == 200:
         redis[key] = server_response.data
@@ -40,6 +40,7 @@ def get_message(key: int):
 
 @app.route('/messages/<int:key>', methods=["POST"])
 def post_message(key: int):
+    logger.debug("POST: try to delete key=%d from cache" % key)
     if redis.exists(key):
         del redis[key]
 
@@ -48,7 +49,10 @@ def post_message(key: int):
 
 @app.route('/messages/<int:key>', methods=["DELETE"])
 def delete_message(key: int):
+    logger.debug("DELETE: try to delete key=%d from cache" % key)
     if redis.exists(key):
         del redis[key]
+    else:
+        logger.warning("DELETE: no value in cache for key=%d" % key)
 
     return request_server("delete", key)

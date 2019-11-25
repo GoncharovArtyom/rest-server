@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def get_message(key: int):
     message = model.Message.query.filter_by(key=key).first()
     if message is None:
-        logger.error("no value in database for key=%d" % key)
+        logger.error("GET: no value in database for key=%d" % key)
         return Response(status=HTTPStatus.NOT_FOUND)
 
     return jsonify(message.value)
@@ -43,6 +43,7 @@ def post_message(key: int):
 def delete_message(key: int):
     message = model.Message.query.filter_by(key=key).first()
     if message is None:
+        logger.error("DELETE: no value in database for key=%d" % key)
         return Response(status=HTTPStatus.NOT_FOUND)
 
     db.session.delete(message)
