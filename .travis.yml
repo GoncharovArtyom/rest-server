@@ -7,7 +7,7 @@ jobs:
   include:
   - stage: test
     script:
-      - make tests
+      - make test
 
   - stage: publish
     if: branch = master
