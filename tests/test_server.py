@@ -1,8 +1,8 @@
-import requests
-from random import randint
 from http import HTTPStatus
+
+import requests
+
 from server.model import Message
-from sqlalchemy.orm.session import Session
 
 
 def test_post_message(server_messages_url, session, get_key):
