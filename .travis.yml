@@ -10,5 +10,6 @@ jobs:
       - make tests
 
   - stage: publish
+    if: branch = master
     script:
-      - echo hello
+      - make publish
