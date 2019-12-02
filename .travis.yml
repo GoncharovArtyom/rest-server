@@ -1,4 +1,7 @@
 language: python
 
+services:
+  - docker
+
 script:
-  - echo hello
+  - make test
