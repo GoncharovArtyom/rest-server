@@ -7,7 +7,7 @@ jobs:
   include:
   - stage: test
     script:
-      - make test
+      - make tests
 
   - stage: publish
     script:
