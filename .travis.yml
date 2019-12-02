@@ -3,5 +3,12 @@ language: python
 services:
   - docker
 
-script:
-  - make test
+jobs:
+  include:
+  - stage: test
+    script:
+      - make test
+
+  - stage: publish
+    script:
+      - echo hello
