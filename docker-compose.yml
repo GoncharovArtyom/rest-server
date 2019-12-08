@@ -30,6 +30,10 @@ services:
     ports:
     - 65433:65432
     command: ["python", "run_balancer.py"]
+    depends_on:
+      - server0
+      - server1
+      - redis
 
   server0:
     build:
@@ -38,12 +42,16 @@ services:
       - DATABASE_URL=postgresql://postgres:123@database:5432/postgres
     ports:
       - 65432:65432
+    depends_on:
+      - database
 
   server1:
     build:
       context: .
     environment:
     - DATABASE_URL=postgresql://postgres:123@database:5432/postgres
+    depends_on:
+      - database
 
 
 volumes:
