@@ -50,7 +50,8 @@ services:
     build:
       context: .
     environment:
-    - SERVER_URL=http://server0:65432
+    - SERVER0_URL=http://server0:65432
+    - SERVER1_URL=http://server1:65432
     - DATABASE_URL=postgresql://postgres:123@database:5432/postgres
     - REDIS_HOST=redis
     - REDIS_PORT=6379

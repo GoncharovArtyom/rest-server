@@ -7,4 +7,4 @@ REDIS_HOST = os.environ["REDIS_HOST"]
 REDIS_PORT = os.environ["REDIS_PORT"]
 
 PATH_TO_LOG_CONFIG = Path(__file__).parent.parent / "logging.conf"
-BALANCER_PORT = 65433
+BALANCER_PORT = 65432

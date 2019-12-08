@@ -1,12 +1,10 @@
 from enum import Enum
-from uuid import uuid4
 
 
 class Role(Enum):
-
-    reader = "reader"
-    writer = "writer"
-    admin = "admin"
+    READER = "reader"
+    WRITER = "writer"
+    ADMIN = "admin"
 
 
 NAMES_TO_PASSWORDS = {

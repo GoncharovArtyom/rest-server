@@ -26,7 +26,7 @@ def request_server(method: str, key: int) -> Response:
 
 
 @app.route('/messages/<int:key>', methods=["GET"])
-@allowed_for(Role.reader, Role.writer, Role.admin)
+@allowed_for(Role.READER, Role.WRITER, Role.ADMIN)
 def get_message(key: int):
     logger.debug("ask  cache for key=%d" % key)
     if redis.exists(key):
@@ -41,7 +41,7 @@ def get_message(key: int):
 
 
 @app.route('/messages/<int:key>', methods=["POST"])
-@allowed_for(Role.writer, Role.admin)
+@allowed_for(Role.WRITER, Role.ADMIN)
 def post_message(key: int):
     if redis.exists(key):
         del redis[key]
@@ -50,7 +50,7 @@ def post_message(key: int):
 
 
 @app.route('/messages/<int:key>', methods=["DELETE"])
-@allowed_for(Role.admin)
+@allowed_for(Role.ADMIN)
 def delete_message(key: int):
     if redis.exists(key):
         del redis[key]
